@@ -1,0 +1,182 @@
+@rootURL = http://localhost:5228
+@httpsRootUrl = https://localhost:7047
+@adminToken = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3VwZXJBZG1pbiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMTExMTExMTEtMTExMS0xMTExLTExMTEtMTExMTExMTExMTExIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZG1pbkBhZG1pbi5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9kYXRlb2ZiaXJ0aCI6IjAxLzAxLzE5OTAgMDA6MDA6MDAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9tb2JpbGVwaG9uZSI6IjA2MTIzNDU3OCIsImV4cCI6MTc1MDQyMjQ1OCwiaXNzIjoiaHR0cHM6Ly9hcGkuZmluYW5jZWFwcC5jb20iLCJhdWQiOiJodHRwczovL2FwcC5maW5hbmNlYXBwLmNvbSJ9.xNM_tgSqPCR2U3VZTyWNIVbsl1kaNRBQ-_Z9kX1lZR4eDMvpMKz2NwVdR9eu8MJfHlJWfLDYVwJNx1a1m_wDPg
+@userToken = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoicGV0YXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjFhNGRiZjZhLTIxY2EtNGVlMy1kZWY5LTA4ZGRhYWNlNjgzYiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6InVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJwZXRhckBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9kYXRlb2ZiaXJ0aCI6IjAzLzAyLzE5OTggMDA6MDA6MDAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9tb2JpbGVwaG9uZSI6IjA2MDM1Njc4OSIsImV4cCI6MTc1MDQyMjU5MSwiaXNzIjoiaHR0cHM6Ly9hcGkuZmluYW5jZWFwcC5jb20iLCJhdWQiOiJodHRwczovL2FwcC5maW5hbmNlYXBwLmNvbSJ9.Q67Bn3YITi6K0ashEFGarlXaK_1r7Un67mry0lxkV80eJR6_QETP0i6P5-d1pzZbdxniKEKpd2Sp-n1USJD_EA
+
+### User registration
+POST {{rootURL}}/api/users/register
+Content-Type: application/json
+{
+    "userName" : "sara",
+    "password" : "sara12!3",
+    "confirmPassword" : "sara12!3",
+    "email" : "sara.sara3@gmail.com",
+    "role" : "user",
+    "acceptTerms" : true,
+    "personalInfo": {
+        "firstName": "Sara",
+        "lastName": "Nikolic",
+        "dateOfBirth": "1995-08-19",
+        "phoneNumber": "06564567"
+    },
+    "addressInfo": {
+        "street": "Maksima Gorkog",
+        "city": "Beograd",
+        "postalCode": "11104",
+        "country": "Serbia",
+        "houseNumber": 7
+    }
+}
+
+### User login
+POST {{rootURL}}/api/users/login
+Content-Type: application/json
+{
+     "userName": "petar",
+     "password": "pera123!"
+}
+
+### Admin login
+POST {{rootURL}}/api/users/login
+Content-Type: application/json
+{
+     "userName": "superAdmin",
+     "password": "admin123"
+}
+
+### Get all users (admin)
+GET {{httpsRootUrl}}/api/users/all-users
+Authorization: Bearer {{adminToken}}
+
+### Get all admins (admin)
+GET {{httpsRootUrl}}/api/users/all-admins
+Authorization: Bearer {{adminToken}}
+
+### Add other admin (admin)
+POST {{httpsRootUrl}}/api/users/addAdmin
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3VwZXJBZG1pbiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMTExMTExMTEtMTExMS0xMTExLTExMTEtMTExMTExMTExMTExIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZG1pbkBhZG1pbi5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9kYXRlb2ZiaXJ0aCI6IjAxLzAxLzE5OTAgMDA6MDA6MDAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9tb2JpbGVwaG9uZSI6IjA2MTIzNDU3OCIsImV4cCI6MTc1MDIwMDMzNSwiaXNzIjoiaHR0cHM6Ly9hcGkuZmluYW5jZWFwcC5jb20iLCJhdWQiOiJodHRwczovL2FwcC5maW5hbmNlYXBwLmNvbSJ9.u0Dkn5Xttiqu4srQU1vFB_S3OS7h8D0AUtc6ZeD9MITYc_j4M-eGfe-A538at3YLYUGHETxYUVLir4Z7Z2ocDQ
+Content-Type: application/json
+{
+    "userName" : "lukaAdmin",
+    "password" : "lukA89",
+    "confirmPassword" : "lukA89",
+    "email" : "luka.admin@gmail.com",
+    "role" : "admin",
+    "acceptTerms" : true,
+    "personalInfo": {
+        "firstName": "Luka",
+        "lastName": "Petrovic",
+        "dateOfBirth": "2002-12-09",
+        "phoneNumber": "062 878 758"
+    },
+    "addressInfo": {
+        "street": "Carice Milice",
+        "city": "Novi Sad",
+        "postalCode": "400112",
+        "country": "Serbia",
+        "houseNumber": 17
+    }
+}
+
+### Delete user (admin)
+DELETE {{httpsRootUrl}}/api/users/deleteUser/1a4dbf6a-21ca-4ee3-def9-08ddaace683b
+Authorization: Bearer {{adminToken}}
+
+### Add transaction category (admin)
+POST {{httpsRootUrl}}/api/transaction/addCategory/gift
+Authorization: Bearer {{adminToken}}
+
+### Add transaction (user)
+POST {{httpsRootUrl}}/api/transaction/addTransaction
+Authorization: Bearer {{userToken}} 
+Content-Type: application/json
+{
+    "type": "expense",
+    "amount": 5000,
+    "categoryId": 4,
+    "dateTime": "2025-06-10"
+}
+
+### Get account balance (user)
+GET {{httpsRootUrl}}/api/transaction/accountBalance
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### Get all transactions (user)
+GET {{httpsRootUrl}}/api/transaction/allTransactions
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### Get all income (user)
+GET {{httpsRootUrl}}/api/transaction/allIncome
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### Get all expenses (user)
+GET {{httpsRootUrl}}/api/transaction/allExpenses
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### Change phone number
+PUT {{httpsRootUrl}}/api/users/changePhoneNumber
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+"062 355 729"
+
+### Change address info
+PUT {{httpsRootUrl}}/api/users/changeAddressInfo
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+{
+    "street": "Karadjordjeva ulica",
+    "city": "Valjevo",
+    "postalCode": "251604",
+    "country": "Serbia",
+    "houseNumber": 10
+}
+
+### Get last month's expenses (user)
+GET {{httpsRootUrl}}/api/transaction/allLastMonthsExpenses
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### Get last month's income (user)
+GET {{httpsRootUrl}}/api/transaction/allLastMonthsIncome
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### Get last month's transactions (user)
+GET {{httpsRootUrl}}/api/transaction/allLastMonthsTransactions
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### Sort users by username (ascending)
+GET {{httpsRootUrl}}/api/users/sortUsersByUsername
+Authorization: Bearer {{adminToken}}
+
+### Sort users by email (descending)
+GET {{httpsRootUrl}}/api/users/sortUsersByEmailDesc
+Authorization: Bearer {{adminToken}}
+
+### Sort admins by username (descending)
+GET {{httpsRootUrl}}/api/users/sortAdminsByUserNameDesc
+Authorization: Bearer {{adminToken}}
+
+### Sort users by transaction count (descending)
+GET {{httpsRootUrl}}/api/users/sortUsersByTransactionCount
+Authorization: Bearer {{adminToken}}
+
+### Edit transaction (user)
+PUT {{httpsRootUrl}}/api/transaction/editTransaction/9
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+{
+  "type": "income",
+  "amount": 6500,
+  "categoryId": 14,
+  "dateTime": "2025-06-12"
+}
+
+### Delete transaction (user)
+DELETE {{httpsRootUrl}}/api/transaction/removeTransaction/11
+Authorization: Bearer {{userToken}}
