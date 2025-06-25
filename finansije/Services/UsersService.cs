@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using finansije.Data;
 using finansije.Entities;
@@ -74,11 +75,12 @@ namespace finansije.Services
             return 0;
         }
 
-        public async Task<string> LoginAsync(UserLoginDto request)
+        public async Task<TokenResponseDto?> LoginAsync(UserLoginDto request)
         {
             var user = await context.Users
                 .Include(u => u.PersonalInfo)
                 .FirstOrDefaultAsync(u => u.UserName == request.UserName);
+            
             if (user == null)
             {
                 return null;
@@ -90,7 +92,12 @@ namespace finansije.Services
                 return null;
             }
 
-            return CreateToken(user);
+            var response = new TokenResponseDto
+            {
+                AccessToken = CreateToken(user),
+                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
+            };
+            return response;
         }
 
         private string CreateToken(User user)
@@ -118,9 +125,10 @@ namespace finansije.Services
                 expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: creds
             );
-            return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor); ;
-
+            
+            return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor); 
         }
+
         public async Task<List<UserProfilDto>> GetAllUsers(string role)
         {
             var users = await context.Users
@@ -238,7 +246,6 @@ namespace finansije.Services
 
             var sortedUsers = await users.ToListAsync();
 
-
             var result = sortedUsers.Select(u => new UserProfilDto
             {
                 UserName = u.UserName,
@@ -295,6 +302,50 @@ namespace finansije.Services
             }).ToList();
 
             return result;
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var rendomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(rendomNumber);
+            return Convert.ToBase64String(rendomNumber);
+        }
+
+        private async Task<string> GenerateAndSaveRefreshTokenAsync(User user)
+        {
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
+            await context.SaveChangesAsync();
+            return refreshToken;
+        }
+
+        private async Task<User?> ValidateRefreshTokenAsync(Guid id, string refreshToken)
+        {
+            var user = await context.Users
+                .Include(u => u.PersonalInfo)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user is null || user.RefreshToken != refreshToken ||
+                user.RefreshTokenExpireTime <= DateTime.UtcNow)
+            {
+                return null;
+            }
+
+            return user;
+        }
+        public async Task<TokenResponseDto?> RefreshTokenAsync(RefreshTokenRequestDto request)
+        {
+            var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+            if (user is null)
+                return null;
+            var response = new TokenResponseDto()
+            {
+                AccessToken = CreateToken(user),
+                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
+            };
+            return response;
         }
     }
 }

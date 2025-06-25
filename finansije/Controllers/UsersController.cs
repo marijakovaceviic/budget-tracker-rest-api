@@ -34,17 +34,17 @@ namespace finansije.Controllers
             if (status == -3)
                 return BadRequest("Already exists profil with this email");
             if (status == -4)
-                return BadRequest("Username cannot conatin word 'admin'");
+                return BadRequest("Username cannot contain word 'admin'");
             return Ok("Successful registration!");
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UserLoginDto request)
+        public async Task<ActionResult<TokenResponseDto>> Login(UserLoginDto request)
         {
-            var token = await usersService.LoginAsync(request);
-            if (token is null)
+            var result = await usersService.LoginAsync(request);
+            if (result is null)
                 return BadRequest("Invalid username or password");
-            return Ok(token);
+            return Ok(result);
         }
 
         [Authorize(Roles = "admin")]
@@ -188,6 +188,16 @@ namespace finansije.Controllers
         public async Task<ActionResult<List<UserProfilDto>>> GetUsersSortedByTransactionCount()
         {
             var result = await usersService.SortUserByTransactionCountAsync();
+            return Ok(result);
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
+        {
+            var result = await usersService.RefreshTokenAsync(request);
+            if (result is null || result.AccessToken is null || result.RefreshToken is null)
+                return Unauthorized("Invalid refresh token");
+
             return Ok(result);
         }
     }

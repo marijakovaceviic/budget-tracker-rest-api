@@ -12,5 +12,7 @@
         public int AddressInfoId { get; set; }
         public AddressInfo AddressInfo { get; set; }
         public List<Transaction> Transactions { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpireTime { get; set; }
     }
 }
